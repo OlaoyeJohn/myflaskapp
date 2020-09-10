@@ -36,7 +36,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 
 conn = psycopg2.connect(
-    database="postgres",
+    database="db3u50742op9k3",
     user="ifbvgdtixghczw",
     password="6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999",
     host="ec2-54-204-26-236.compute-1.amazonaws.com",
