@@ -167,7 +167,7 @@ def login():
         error = 'Username not found'
 
         # close connection
-        cur.close()
+        #cur.close()
         flash('User Not Found! Please Register.')
         return render_template('login.html', error=error)
 
