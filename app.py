@@ -115,7 +115,7 @@ def register():
                     (name, email, username, password))
 
         # commit to DB
-        con.commit()
+        conn.commit()
 
         # close connection
         cur.close()
@@ -141,8 +141,8 @@ def login():
         # cur = migrate.connection.cursor()
 
         # get user by username
-        result = cur.execute(
-            "SELECT * FROM users WHERE username = %s", [username])
+        result = int(cur.execute(
+            "SELECT * FROM users WHERE username = %s", [username]))
 
         if result > 0:
             # get stored hash
