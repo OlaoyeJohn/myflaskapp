@@ -11,6 +11,8 @@ import pandas as pd
 import numpy as np
 import sqlalchemy
 import pickle
+from flask_migrate import Migrate
+
 
 
 
@@ -22,21 +24,24 @@ model= pickle.load(open('model.pkl','rb'))
 
 
 # config my sql
-app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_HOST'] = 'ec2-54-204-26-236.compute-1.amazonaws.com'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Current-Root-Password'
-app.config['MYSQL_DB'] = 'myflaskapp'
+app.config['MYSQL_PASSWORD'] = '6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999'
+app.config['MYSQL_DB'] = 'db3u50742op9k3'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 app.config['SECRET_KEY'] = "Pass1234"
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 
-engine = sqlalchemy.create_engine("mysql+pymysql://root:Current-Root-Password@localhost:3306/myflaskapp")
+engine = sqlalchemy.create_engine("postgres://ifbvgdtixghczw:6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999@ec2-54-204-26-236.compute-1.amazonaws.com:5432/db3u50742op9k3")
 
 
 # init MYSQL
 mysql = MySQL(app)
+
+# init Postgres
+migrate = Migrate(app)
 
 
 CsvFiles = CsvFiles()
@@ -97,13 +102,13 @@ def register():
         password = sha256_crypt.encrypt(str(form.password.data))
 
         # create cursor
-        cur = mysql.connection.cursor()
+        cur = migrate.connection.cursor()
 
         cur.execute("INSERT INTO users(name, email, username, password) VALUES(%s, %s, %s, %s)",
                     (name, email, username, password))
 
         # commit to DB
-        mysql.connection.commit()
+        migrate.connection.commit()
 
         # close connection
         cur.close()
@@ -126,7 +131,7 @@ def login():
 
         # database cursor
 
-        cur = mysql.connection.cursor()
+        cur = migrate.connection.cursor()
 
         # get user by username
         result = cur.execute(
