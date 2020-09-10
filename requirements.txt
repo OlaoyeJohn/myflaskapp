@@ -83,7 +83,7 @@ tabpy-client==0.2
 tabpy-server==0.2
 testpath==0.4.4
 threadpoolctl==2.1.0
-tornado==5.2
+tornado==6.0.4
 Tornado-JSON==1.3.4
 traitlets==4.3.3
 urllib3==1.25.8
