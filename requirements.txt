@@ -65,7 +65,6 @@ protobuf==3.13.0
 pycparser==2.20
 Pygments==2.6.1
 PyMySQL==0.10.0
-pyodbc==4.0.30
 pyparsing==2.4.7
 pyrsistent==0.16.0
 PySocks==1.7.1
