@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Files{% endblock %}
+
+
+
+{% block body %}
+<Div>
+    <h1>Uploaded Files</h1>
+    <hr>
+</Div>
+<ul>
+
+    {% for csv_files in csv_files %}
+
+    <li class="list-group-item"><a href="csv_file/{{csv_files.id}}">{{csv_files.filename}}</a></li>
+
+    {% endfor %}
+
+</ul>
+
+
+{% endblock %}

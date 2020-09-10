@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+
+
+{% block body %}
+
+
+<h1>Dashboard</h1><h5> Welcome {{session.username}}</h5>
+<hr>
+<div>
+    <h4>To run an analysis on your data, please upload a file with a single record.</h4>
+</div>
+
+<a class="btn btn-success" href="/add_file">Add File To Predict</a>
+
+
+{% endblock %}

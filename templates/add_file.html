@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}Add File{% endblock %}
+
+
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+      <div class="col">
+  
+        <h1>Upload a file</h1>
+        <hr>
+  
+        <form action="/add_file" method="POST" enctype="multipart/form-data">
+  
+          <div class="custom-file">
+            <label>Select CSV</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="csv" id="custom-file">
+              <label class="custom-file-label" for="custom-file">click to select a csv file</label>
+            </div>
+          </div>
+  
+          <button type="submit" class="btn btn-primary">Click To Predict</button>
+  
+        </form>
+  
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}
+
+
+
+
+
+

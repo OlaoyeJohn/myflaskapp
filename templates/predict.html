@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}Predict{% endblock %}
+
+
+
+{% block body %}
+<Div>
+    <h1>Dashboard</h1><h5> Hi {{session.username}}</h5></h1>
+    <hr>
+</Div>
+<h1>{{prediction_text}}</h1>
+
+
+{% endblock %}
