@@ -12,6 +12,7 @@ import numpy as np
 import sqlalchemy
 import pickle
 from flask_migrate import Migrate
+import psycopg2
 
 
 
@@ -25,7 +26,7 @@ model= pickle.load(open('model.pkl','rb'))
 
 # config my sql
 app.config['MYSQL_HOST'] = 'ec2-54-204-26-236.compute-1.amazonaws.com'
-app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_USER'] = 'ifbvgdtixghczw'
 app.config['MYSQL_PASSWORD'] = '6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999'
 app.config['MYSQL_DB'] = 'db3u50742op9k3'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
@@ -34,8 +35,13 @@ app.config['SECRET_KEY'] = "Pass1234"
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 
-engine = sqlalchemy.create_engine("postgres://ifbvgdtixghczw:6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999@ec2-54-204-26-236.compute-1.amazonaws.com:5432/db3u50742op9k3")
-
+conn = psycopg2.connect(
+    database="postgres",
+    user="ifbvgdtixghczw",
+    password="6876463bb34f435637f4cce7b7d05347bab636dda0d6955ccc1e96a1f06ff999",
+    host="ec2-54-204-26-236.compute-1.amazonaws.com",
+    port='5432'
+)
 
 # init MYSQL
 mysql = MySQL(app)
@@ -102,7 +108,6 @@ def register():
         password = sha256_crypt.encrypt(str(form.password.data))
 
         # create cursor
-        conn = psycopg2.connect()
         cur = conn.cursor()
         # cur = migrate.connection.cursor()
 
@@ -227,7 +232,7 @@ def add_file():
 @is_logged_in
 def predict():
 
-    uploaded_file = pd.read_sql_table('trialdata_tbl',engine)
+    uploaded_file = pd.read_sql_table('trialdata_tbl',conn)
 
     prediction = model.predict(uploaded_file)
 
