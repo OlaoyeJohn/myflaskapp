@@ -160,17 +160,16 @@ def login():
             else:
                 error = 'Invalid Login'
                 return render_template('login.html', error=error)
-                
             
          
             
-        else:
-            error = 'Username not found'
-              
-        # close connection
-            cur.close()
-            flash('User Not Found! Please Register.')
-            return render_template('login.html', error=error)
+            else:
+                error = 'Username not found'
+
+             # close connection
+                cur.close()
+                flash('User Not Found! Please Register.')
+                return render_template('login.html', error=error)
 
 
     return render_template("login.html")
