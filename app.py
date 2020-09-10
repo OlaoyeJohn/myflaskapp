@@ -119,7 +119,6 @@ def register():
 
         # close connection
         cur.close()
-        conn.close()
 
         flash('You are now register and can log in', 'success')
 
@@ -164,7 +163,7 @@ def login():
                 
             # close connection
             cur.close()
-            conn.close()
+            
         else:
             error = 'Username not found'
             return render_template('login.html', error=error)
