@@ -115,7 +115,7 @@ def register():
                     (name, email, username, password))
 
         # commit to DB
-        # migrate.connection.commit()
+        con.commit()
 
         # close connection
         cur.close()
@@ -161,12 +161,17 @@ def login():
                 error = 'Invalid Login'
                 return render_template('login.html', error=error)
                 
-            # close connection
-            cur.close()
+            
+         
             
         else:
             error = 'Username not found'
+              
+        # close connection
+            cur.close()
+            flash('User Not Found! Please Register.')
             return render_template('login.html', error=error)
+
 
     return render_template("login.html")
 
