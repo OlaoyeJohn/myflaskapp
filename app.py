@@ -146,7 +146,7 @@ def login():
 
         if result > 0:
             # get stored hash
-            data = cur.fetchone()
+            data = cur.fetchone()[0]
             password = data['password']
 
             # compare password
