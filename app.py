@@ -183,7 +183,7 @@ def table():
 
 
 # Uploads path
-app.config['CSV_FILES'] = '/Users/Yemi159/Desktop/app/static/Uploads/'
+app.config['CSV_FILES'] = '/static/Uploads/'
 
 #upload CSV File
 @app.route("/add_file", methods=["GET", "POST"])
@@ -196,7 +196,7 @@ def add_file():
 
             csv = (request.files["csv"])
             csv.save(os.path.join(app.config['CSV_FILES'],csv.filename))
-            file_path= '/Users/Yemi159/Desktop/app/static/Uploads/'+csv.filename
+            file_path= '/static/Uploads/'+csv.filename
             with open(file_path, 'r') as csv_file:
                 data = pd.read_csv(csv_file)
 
