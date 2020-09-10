@@ -41,7 +41,7 @@ engine = sqlalchemy.create_engine("postgres://ifbvgdtixghczw:6876463bb34f435637f
 mysql = MySQL(app)
 
 # init Postgres
-migrate = Migrate(app)
+# migrate = Migrate(app)
 
 
 CsvFiles = CsvFiles()
@@ -102,16 +102,19 @@ def register():
         password = sha256_crypt.encrypt(str(form.password.data))
 
         # create cursor
-        cur = migrate.connection.cursor()
+        conn = psycopg2.connect()
+        cur = conn.cursor()
+        # cur = migrate.connection.cursor()
 
         cur.execute("INSERT INTO users(name, email, username, password) VALUES(%s, %s, %s, %s)",
                     (name, email, username, password))
 
         # commit to DB
-        migrate.connection.commit()
+        # migrate.connection.commit()
 
         # close connection
         cur.close()
+        conn.close()
 
         flash('You are now register and can log in', 'success')
 
@@ -130,8 +133,8 @@ def login():
         password_candidate = request.form['password']
 
         # database cursor
-
-        cur = migrate.connection.cursor()
+        cur = conn.cursor()
+        # cur = migrate.connection.cursor()
 
         # get user by username
         result = cur.execute(
@@ -156,6 +159,7 @@ def login():
                 
             # close connection
             cur.close()
+            conn.close()
         else:
             error = 'Username not found'
             return render_template('login.html', error=error)
