@@ -132,9 +132,10 @@ def register():
 ## New code trying out start
 @app.route("/login", methods=["POST","GET"])
 def login():
-    return render_template("login.html", t_message = "Login here")
-    username = request.form.get("username", "")
-    password = request.form.get("password", "")
+    if request.method == 'POST'
+        return render_template("login.html", t_message = "Login here")
+        username = request.form.get("username", "")
+        password_candidate = request.form.get("password", "")
 
     # VALIDATION TO CHECK FOR EMPTY FIELDS
     # Check for user name field is empty
@@ -148,22 +149,21 @@ def login():
         return render_template("login.html", t_message = t_message)
 
     # Hash the password they entered into a encrypted hex string
-    hashed = hashlib.sha256(password.encode())
-    password = hashed.hexdigest()
-
+    
+    
     # Taking the time to build our SQL query string so that
     #   (a) we can easily and quickly read it; and
     #   (b) we can easily and quickly edit or add/remote lines.
     #   The more complex the query, the greater the benefits of this approach.
     s = ""
     s += "SELECT"
-    s += " ID"
+    s += " * "
     s += " FROM users"
     s += " WHERE"
     s += "("
     s += " username = '" + username + "'"
     S += " AND"
-    s += " password = '" + password + "'"
+    s += " password = '" + password_candidate + "'"
     s += ")"
     # NOTE: the format above allows for a user to try to insert
     #   potentially damaging code, commonly known as "SQL injection".
@@ -175,7 +175,15 @@ def login():
     #   while TRYing to commit the SQL script.
     cur.execute(s)
     try:
-        array_row = cur.fetchone()
+        data = cur.fetchone()
+        password = data['password']
+        sha256_crypt.verify(password_candidate, password)
+        session['logged_in'] = True
+        session['username'] = username
+
+        flash('You are now logged in', 'success')
+        return redirect(url_for('dashboard'))
+        
     except psycopg2.Error as e:
         t_message = "Postgres Database error: " + e + "/n SQL: " + s
         return render_template("login.html", t_message = t_message)
@@ -185,7 +193,6 @@ def login():
     cur.close()
     
     ## New code end
-
 
 
 #Log out
