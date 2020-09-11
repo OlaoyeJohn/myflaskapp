@@ -132,7 +132,7 @@ def register():
 ## New code trying out start
 @app.route("/login", methods=["POST","GET"])
 def login():
-    if request.method == 'POST'
+    if request.method == 'POST':
         return render_template("login.html", t_message = "Login here")
         username = request.form.get("username", "")
         password_candidate = request.form.get("password", "")
