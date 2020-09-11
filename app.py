@@ -186,7 +186,7 @@ def login():
 
         except psycopg2.Error as e:
             t_message = "Postgres Database error: " + e + "/n SQL: " + s
-            return render_template("login.html")
+            return render_template("dashboard.html")
         cur.close()
 
         # Clean up
