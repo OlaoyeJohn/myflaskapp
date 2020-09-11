@@ -128,52 +128,63 @@ def register():
 
     return render_template('register.html', form=form)
 
-# user Login
-@app.route("/login", methods=['GET', 'POST'])
+
+## New code trying out start
+@app.route("/login", methods=["POST","GET"])
 def login():
-    if request.method == 'POST':
-        # Get Form Fields
-        username = request.form['username']
-        password_candidate = request.form['password']
+    return render_template("login.html", t_message = "Login here")
+    username = request.form.get("username", "")
+    password = request.form.get("password", "")
 
-        # database cursor
-        cur = conn.cursor()
-        # cur = migrate.connection.cursor()
+    # VALIDATION TO CHECK FOR EMPTY FIELDS
+    # Check for user name field is empty
+    if username == "":
+        t_message = "Login - empty field: Please fill in your user name."
+        # Send user back to the dynamic html page (template), with a message
+        return render_template("login.html", t_message = t_message)
 
-        # get user by username
-        result = int(str(cur.execute(
-            "SELECT COUNT(username) FROM users WHERE username = %s", [username])))
+    if password == "":
+        t_message = "Login - empty field: Please fill in your password"
+        return render_template("login.html", t_message = t_message)
 
-        if result > 0:
-            # get stored hash
-            data = cur.fetchone()[0]
-            password = data['password']
+    # Hash the password they entered into a encrypted hex string
+    hashed = hashlib.sha256(password.encode())
+    password = hashed.hexdigest()
 
-            # compare password
-            if sha256_crypt.verify(password_candidate, password):
-                # paased
-                session['logged_in'] = True
-                session['username'] = username
+    # Taking the time to build our SQL query string so that
+    #   (a) we can easily and quickly read it; and
+    #   (b) we can easily and quickly edit or add/remote lines.
+    #   The more complex the query, the greater the benefits of this approach.
+    s = ""
+    s += "SELECT"
+    s += " ID"
+    s += " FROM users"
+    s += " WHERE"
+    s += "("
+    s += " username = '" + username + "'"
+    S += " AND"
+    s += " password = '" + password + "'"
+    s += ")"
+    # NOTE: the format above allows for a user to try to insert
+    #   potentially damaging code, commonly known as "SQL injection".
+    #   In another article (link below) we will show how to
+    #   prevent that by using stored procedures.
+    #   Here we left it as you see, so as to keep it as simple as possible.
 
-                flash('You are now logged in', 'success')
-                return redirect(url_for('dashboard'))
-            else:
-                error = 'Invalid Login'
-                return render_template('login.html', error=error)
-            
-         
-            
-    else:
-        error = 'Username not found'
+    # Catch and display any possible errors
+    #   while TRYing to commit the SQL script.
+    cur.execute(s)
+    try:
+        array_row = cur.fetchone()
+    except psycopg2.Error as e:
+        t_message = "Postgres Database error: " + e + "/n SQL: " + s
+        return render_template("login.html", t_message = t_message)
+    cur.close()
 
-        # close connection
-        #cur.close()
-        flash('User Not Found! Please Register.')
-        return render_template('login.html', error=error)
-
-
-    return render_template("login.html")
-
+    # Clean up
+    cur.close()
+    
+    ## New code end
 
 
 
