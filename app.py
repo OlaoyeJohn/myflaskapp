@@ -139,59 +139,60 @@ def login():
 
     # VALIDATION TO CHECK FOR EMPTY FIELDS
     # Check for user name field is empty
-    if username == "":
-        t_message = "Login - empty field: Please fill in your user name."
-        # Send user back to the dynamic html page (template), with a message
-        return render_template("login.html", t_message = t_message)
+        if username == "":
+            t_message = "Login - empty field: Please fill in your user name."
+            # Send user back to the dynamic html page (template), with a message
+            return render_template("login.html", t_message = t_message)
 
-    if password == "":
-        t_message = "Login - empty field: Please fill in your password"
-        return render_template("login.html", t_message = t_message)
+        if password == "":
+            t_message = "Login - empty field: Please fill in your password"
+            return render_template("login.html", t_message = t_message)
 
-    # Hash the password they entered into a encrypted hex string
+        # Hash the password they entered into a encrypted hex string
     
     
     # Taking the time to build our SQL query string so that
     #   (a) we can easily and quickly read it; and
     #   (b) we can easily and quickly edit or add/remote lines.
     #   The more complex the query, the greater the benefits of this approach.
-    s = ""
-    s += "SELECT"
-    s += " * "
-    s += " FROM users"
-    s += " WHERE"
-    s += "("
-    s += " username = '" + username + "'"
-    S += " AND"
-    s += " password = '" + password_candidate + "'"
-    s += ")"
-    # NOTE: the format above allows for a user to try to insert
-    #   potentially damaging code, commonly known as "SQL injection".
-    #   In another article (link below) we will show how to
-    #   prevent that by using stored procedures.
-    #   Here we left it as you see, so as to keep it as simple as possible.
+        s = ""
+        s += "SELECT"
+        s += " * "
+        s += " FROM users"
+        s += " WHERE"
+        s += "("
+        s += " username = '" + username + "'"
+        S += " AND"
+        s += " password = '" + password_candidate + "'"
+        s += ")"
+        # NOTE: the format above allows for a user to try to insert
+        #   potentially damaging code, commonly known as "SQL injection".
+        #   In another article (link below) we will show how to
+        #   prevent that by using stored procedures.
+        #   Here we left it as you see, so as to keep it as simple as possible.
 
-    # Catch and display any possible errors
-    #   while TRYing to commit the SQL script.
-    cur.execute(s)
-    try:
-        data = cur.fetchone()
-        password = data['password']
-        sha256_crypt.verify(password_candidate, password)
-        session['logged_in'] = True
-        session['username'] = username
+        # Catch and display any possible errors
+        #   while TRYing to commit the SQL script.
+        cur.execute(s)
+        try:
+            data = cur.fetchone()
+            password = data['password']
+            sha256_crypt.verify(password_candidate, password)
+            session['logged_in'] = True
+            session['username'] = username
 
-        flash('You are now logged in', 'success')
-        return redirect(url_for('dashboard'))
-        
-    except psycopg2.Error as e:
-        t_message = "Postgres Database error: " + e + "/n SQL: " + s
-        return render_template("login.html", t_message = t_message)
-    cur.close()
+            flash('You are now logged in', 'success')
+            return redirect(url_for('dashboard'))
 
-    # Clean up
-    cur.close()
-    
+        except psycopg2.Error as e:
+            t_message = "Postgres Database error: " + e + "/n SQL: " + s
+            return render_template("login.html", t_message = t_message)
+        cur.close()
+
+        # Clean up
+        cur.close()
+      
+    return render_template("login.html", t_message = t_message)
     ## New code end
 
 
