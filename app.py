@@ -141,8 +141,8 @@ def login():
         # cur = migrate.connection.cursor()
 
         # get user by username
-        result = cur.execute(
-            "SELECT COUNT(username) FROM users WHERE username = %s", [username])
+        result = int(cur.execute(
+            "SELECT COUNT(username) FROM users WHERE username = %s", [username]))
 
         if result > 0:
             # get stored hash
